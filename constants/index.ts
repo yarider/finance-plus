@@ -1,0 +1,78 @@
+export const CATEGORIES_EXPENSE = [
+  { id: "food", name: "Продукти", icon: "🍕", color: "#C84C5A" },
+  { id: "transport", name: "Транспорт", icon: "🚗", color: "#2B6CB0" },
+  { id: "entertainment", name: "Розваги", icon: "🎬", color: "#A16207" },
+  { id: "utilities", name: "Комунальні", icon: "💡", color: "#0F766E" },
+  { id: "health", name: "Здоров'я", icon: "⚕️", color: "#B42318" },
+  { id: "shopping", name: "Покупки", icon: "🛍️", color: "#7C3AED" },
+  { id: "education", name: "Освіта", icon: "📚", color: "#A61E4D" },
+  { id: "other", name: "Інше", icon: "📌", color: "#475467" },
+];
+
+export const CATEGORIES_INCOME = [
+  { id: "salary", name: "Зарплата", icon: "💰", color: "#15803D" },
+  { id: "freelance", name: "Фріланс", icon: "💻", color: "#0F766E" },
+  { id: "bonus", name: "Премія", icon: "🎁", color: "#0369A1" },
+  { id: "other-income", name: "Інше", icon: "📈", color: "#1D4ED8" },
+];
+
+export const MD3 = {
+  primary: "#6750A4",
+  onPrimary: "#FFFFFF",
+  primaryContainer: "#EADDFF",
+  onPrimaryContainer: "#21005D",
+  secondaryContainer: "#E8DEF8",
+  error: "#B3261E",
+  background: "#FFFBFE",
+  surface: "#FFFBFE",
+  onSurface: "#1C1B1F",
+  onSurfaceVariant: "#49454F",
+  surfaceVariant: "#E7E0EC",
+  surfaceContainer: "#F3EDF7",
+  surfaceContainerHigh: "#ECE6F0",
+  outlineVariant: "#CAC4D0",
+  shadow: "#000000",
+  success: "#146C2E",
+  successContainer: "#C4EED0",
+  errorContainer: "#F9DEDC",
+  warning: "#B26A00",
+};
+
+export const COLORS = {
+  primary: MD3.primary,
+  onPrimary: MD3.onPrimary,
+  secondary: MD3.success,
+  secondaryContainer: MD3.secondaryContainer,
+  danger: MD3.error,
+  warning: MD3.warning,
+  light: MD3.surfaceContainer,
+  dark: MD3.onSurface,
+  shadow: MD3.shadow,
+  text: MD3.onSurface,
+  textMuted: MD3.onSurfaceVariant,
+  border: MD3.outlineVariant,
+  background: MD3.background,
+  surface: MD3.surface,
+  surfaceVariant: MD3.surfaceVariant,
+  surfaceContainer: MD3.surfaceContainer,
+  surfaceContainerHigh: MD3.surfaceContainerHigh,
+  primaryContainer: MD3.primaryContainer,
+  onPrimaryContainer: MD3.onPrimaryContainer,
+  successContainer: MD3.successContainer,
+  errorContainer: MD3.errorContainer,
+};
+
+export const MONTH_NAMES = [
+  "Січень",
+  "Лютий",
+  "Березень",
+  "Квітень",
+  "Травень",
+  "Червень",
+  "Липень",
+  "Серпень",
+  "Вересень",
+  "Жовтень",
+  "Листопад",
+  "Грудень",
+];
