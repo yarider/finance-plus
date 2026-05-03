@@ -52,22 +52,26 @@ export const useFinanceStore = create<Store>((set, get) => ({
       const transactions = await getAllTransactions();
       const categories = await getAllCategories();
       const budgetLimits = await getAllBudgetLimits();
+      const defaultCategories = [
+        ...CATEGORIES_EXPENSE.map((c) => ({
+          ...c,
+          type: "expense" as const,
+        })),
+        ...CATEGORIES_INCOME.map((c) => ({
+          ...c,
+          type: "income" as const,
+        })),
+      ];
+      const defaultCategoryIds = new Set(
+        defaultCategories.map((category) => category.id),
+      );
+      const customCategories = (categories || []).filter(
+        (category) => !defaultCategoryIds.has(category.id),
+      );
 
       set({
         transactions: transactions || [],
-        categories:
-          categories && categories.length > 0
-            ? categories
-            : [
-                ...CATEGORIES_EXPENSE.map((c) => ({
-                  ...c,
-                  type: "expense" as const,
-                })),
-                ...CATEGORIES_INCOME.map((c) => ({
-                  ...c,
-                  type: "income" as const,
-                })),
-              ],
+        categories: [...defaultCategories, ...customCategories],
         budgetLimits: budgetLimits || [],
         initialized: true,
       });

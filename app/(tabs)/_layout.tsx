@@ -3,9 +3,12 @@ import { useFinanceStore } from "@/store";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs } from "expo-router";
 import { useEffect } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TabLayout() {
   const initialize = useFinanceStore((state) => state.initialize);
+  const insets = useSafeAreaInsets();
+  const bottomInset = Math.max(insets.bottom);
 
   useEffect(() => {
     initialize();
@@ -24,9 +27,9 @@ export default function TabLayout() {
           fontWeight: "600",
         },
         tabBarStyle: {
-          height: 72,
+          height: 62 + bottomInset,
           paddingTop: 10,
-          paddingBottom: 10,
+          paddingBottom: bottomInset,
           backgroundColor: COLORS.surfaceContainer,
           borderTopWidth: 0,
           elevation: 0,
@@ -45,8 +48,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Облік",
-          tabBarLabel: "Облік",
+          title: "Фінанси",
+          tabBarLabel: "Фінанси",
           tabBarIcon: ({ color, size }) => (
             <FontAwesome name="list-alt" size={size} color={color} />
           ),
@@ -62,6 +65,17 @@ export default function TabLayout() {
             <FontAwesome name="pie-chart" size={size} color={color} />
           ),
           headerTitle: "Аналітика витрат",
+        }}
+      />
+      <Tabs.Screen
+        name="ai"
+        options={{
+          title: "AI",
+          tabBarLabel: "AI",
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="magic" size={size} color={color} />
+          ),
+          headerTitle: "AI фінансовий помічник",
         }}
       />
       <Tabs.Screen

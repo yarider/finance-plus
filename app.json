@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Finance-plus",
-    "slug": "Finance-plus",
+    "name": "Гаманець+",
+    "slug": "gamanets-plus",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "financeplus",
+    "scheme": "gamanetsplus",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
