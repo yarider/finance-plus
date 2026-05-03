@@ -2,15 +2,17 @@ import { COLORS } from "@/constants";
 import { Category, Transaction, TransactionType } from "@/types";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
+  Animated,
   Modal,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from "react-native";
 
@@ -27,6 +29,9 @@ export function AddTransactionModal({
   onAdd,
   categories,
 }: AddTransactionModalProps) {
+  const { height: windowHeight } = useWindowDimensions();
+  const [isMounted, setIsMounted] = useState(visible);
+  const slideAnim = useRef(new Animated.Value(windowHeight)).current;
   const [type, setType] = useState<TransactionType>("expense");
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
@@ -35,6 +40,33 @@ export function AddTransactionModal({
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const categoryList = categories.filter((c) => c.type === type);
+
+  useEffect(() => {
+    if (!visible) {
+      setIsMounted(false);
+      return;
+    }
+
+    setIsMounted(true);
+    slideAnim.setValue(windowHeight);
+    Animated.timing(slideAnim, {
+      toValue: 0,
+      duration: 260,
+      useNativeDriver: true,
+    }).start();
+  }, [slideAnim, visible, windowHeight]);
+
+  const handleClose = (afterClose?: () => void) => {
+    Animated.timing(slideAnim, {
+      toValue: windowHeight,
+      duration: 220,
+      useNativeDriver: true,
+    }).start(() => {
+      afterClose?.();
+      setIsMounted(false);
+      onClose();
+    });
+  };
 
   const handleDateChange = (_event: unknown, selectedDate?: Date) => {
     if (selectedDate) {
@@ -57,23 +89,38 @@ export function AddTransactionModal({
       type,
     });
 
-    setAmount("");
-    setDescription("");
-    setSelectedCategory(null);
-    setDate(new Date());
-    onClose();
+    handleClose(() => {
+      setAmount("");
+      setDescription("");
+      setSelectedCategory(null);
+      setDate(new Date());
+    });
   };
 
+  if (!isMounted) {
+    return null;
+  }
+
   return (
-    <Modal visible={visible} animationType="slide" transparent>
+    <Modal
+      visible={isMounted}
+      animationType="none"
+      transparent
+      onRequestClose={() => handleClose()}
+    >
       <View style={styles.overlay}>
-        <View style={styles.container}>
+        <Animated.View
+          style={[styles.container, { transform: [{ translateY: slideAnim }] }]}
+        >
           <View style={styles.header}>
             <View>
               <Text style={styles.eyebrow}>Нова транзакція</Text>
               <Text style={styles.title}>Додати операцію</Text>
             </View>
-            <TouchableOpacity onPress={onClose} style={styles.iconButton}>
+            <TouchableOpacity
+              onPress={() => handleClose()}
+              style={styles.iconButton}
+            >
               <FontAwesome name="close" size={20} color={COLORS.text} />
             </TouchableOpacity>
           </View>
@@ -144,7 +191,8 @@ export function AddTransactionModal({
                     key={cat.id}
                     style={[
                       styles.categoryItem,
-                      selectedCategory === cat.id && styles.categoryItemSelected,
+                      selectedCategory === cat.id &&
+                        styles.categoryItemSelected,
                     ]}
                     onPress={() => setSelectedCategory(cat.id)}
                   >
@@ -173,7 +221,11 @@ export function AddTransactionModal({
                 style={styles.dateButton}
                 onPress={() => setShowDatePicker(true)}
               >
-                <FontAwesome name="calendar-o" size={18} color={COLORS.primary} />
+                <FontAwesome
+                  name="calendar-o"
+                  size={18}
+                  color={COLORS.primary}
+                />
                 <Text style={styles.dateButtonText}>
                   {date.toLocaleDateString("uk-UA")}
                 </Text>
@@ -191,14 +243,17 @@ export function AddTransactionModal({
           </ScrollView>
 
           <View style={styles.footer}>
-            <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={() => handleClose()}
+            >
               <Text style={styles.cancelText}>Скасувати</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.saveButton} onPress={handleAdd}>
               <Text style={styles.saveText}>Додати</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </Animated.View>
       </View>
     </Modal>
   );
@@ -343,7 +398,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 12,
     paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingTop: 12,
+    paddingBottom: 4,
     borderTopWidth: 1,
     borderTopColor: COLORS.border,
   },

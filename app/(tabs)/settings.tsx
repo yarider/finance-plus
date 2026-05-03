@@ -1,29 +1,61 @@
 import { COLORS, MONTH_NAMES } from "@/constants";
 import { useFinanceStore } from "@/store";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
+  Animated,
   Modal,
   SectionList,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SettingsScreen() {
+  const { height: windowHeight } = useWindowDimensions();
   const { categories, budgetLimits, addBudgetLimit } = useFinanceStore();
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [limitAmount, setLimitAmount] = useState("");
   const [selectedMonth] = useState(new Date().getMonth() + 1);
   const [selectedYear] = useState(new Date().getFullYear());
+  const [limitModalMounted, setLimitModalMounted] = useState(false);
+  const limitModalSlideAnim = useRef(new Animated.Value(windowHeight)).current;
 
   const expenseCategories = categories.filter((c) => c.type === "expense");
   const incomeCategories = categories.filter((c) => c.type === "income");
+
+  useEffect(() => {
+    if (!modalVisible) {
+      setLimitModalMounted(false);
+      return;
+    }
+
+    setLimitModalMounted(true);
+    limitModalSlideAnim.setValue(windowHeight);
+    Animated.timing(limitModalSlideAnim, {
+      toValue: 0,
+      duration: 260,
+      useNativeDriver: true,
+    }).start();
+  }, [limitModalSlideAnim, modalVisible, windowHeight]);
+
+  const closeLimitModal = (afterClose?: () => void) => {
+    Animated.timing(limitModalSlideAnim, {
+      toValue: windowHeight,
+      duration: 220,
+      useNativeDriver: true,
+    }).start(() => {
+      afterClose?.();
+      setLimitModalMounted(false);
+      setModalVisible(false);
+    });
+  };
 
   const handleSetLimit = () => {
     if (!selectedCategory || !limitAmount) {
@@ -39,10 +71,11 @@ export default function SettingsScreen() {
       year: selectedYear,
     });
 
-    setLimitAmount("");
-    setSelectedCategory(null);
-    setModalVisible(false);
-    Alert.alert("Готово", "Ліміт збережено.");
+    closeLimitModal(() => {
+      setLimitAmount("");
+      setSelectedCategory(null);
+      Alert.alert("Готово", "Ліміт збережено.");
+    });
   };
 
   const getCategoryLimit = (categoryId: string) =>
@@ -132,16 +165,26 @@ export default function SettingsScreen() {
         showsVerticalScrollIndicator={false}
       />
 
-      <Modal visible={modalVisible} animationType="slide" transparent>
+      <Modal
+        visible={limitModalMounted}
+        animationType="none"
+        transparent
+        onRequestClose={() => closeLimitModal()}
+      >
         <View style={styles.overlay}>
-          <View style={styles.modalContainer}>
+          <Animated.View
+            style={[
+              styles.modalContainer,
+              { transform: [{ translateY: limitModalSlideAnim }] },
+            ]}
+          >
             <View style={styles.modalHeader}>
               <View>
                 <Text style={styles.modalLabel}>Місячний бюджет</Text>
                 <Text style={styles.modalTitle}>Встановити ліміт</Text>
               </View>
               <TouchableOpacity
-                onPress={() => setModalVisible(false)}
+                onPress={() => closeLimitModal()}
                 style={styles.closeButton}
               >
                 <FontAwesome name="close" size={20} color={COLORS.text} />
@@ -188,7 +231,7 @@ export default function SettingsScreen() {
             <View style={styles.modalFooter}>
               <TouchableOpacity
                 style={styles.cancelButton}
-                onPress={() => setModalVisible(false)}
+                onPress={() => closeLimitModal()}
               >
                 <Text style={styles.cancelText}>Скасувати</Text>
               </TouchableOpacity>
@@ -196,7 +239,7 @@ export default function SettingsScreen() {
                 <Text style={styles.saveText}>Зберегти</Text>
               </TouchableOpacity>
             </View>
-          </View>
+          </Animated.View>
         </View>
       </Modal>
     </SafeAreaView>
