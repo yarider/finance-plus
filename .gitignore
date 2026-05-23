@@ -1,15 +1,15 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+# Тут можна почитати більше про gitignore, тобто які файли Git має не додавати в репозиторій: https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
-# dependencies
+# Тут не зберігаю залежності, бо вони ставляться заново через npm install.
 node_modules/
 
-# Expo
+# Тут файли Expo, які створюються автоматично під час запуску або збірки проєкту.
 .expo/
 dist/
 web-build/
 expo-env.d.ts
 
-# Native
+# Тут нативні файли і ключі, які можуть з'являтися для Android або iOS і не мають потрапляти в Git.
 .kotlin/
 *.orig.*
 *.jks
@@ -18,26 +18,26 @@ expo-env.d.ts
 *.key
 *.mobileprovision
 
-# Metro
+# Тут службові файли Metro bundler, який збирає React Native додаток.
 .metro-health-check*
 
-# debug
+# Тут debug-логи від пакетних менеджерів, вони потрібні тільки локально коли щось впало.
 npm-debug.*
 yarn-debug.*
 yarn-error.*
 
-# macOS
+# Тут системні файли macOS, які сама система може створювати в папках.
 .DS_Store
 *.pem
 
-# local env files
+# Тут локальні env-файли з налаштуваннями, бо там можуть бути приватні змінні.
 .env*.local
 
-# typescript
+# Тут кеш TypeScript, він просто допомагає швидше перевіряти код і його можна створити заново.
 *.tsbuildinfo
 
 app-example
 
-# generated native folders
+# Тут згенеровані нативні папки, бо Expo може створити їх знову коли треба.
 /ios
 /android

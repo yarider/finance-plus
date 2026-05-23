@@ -1,4 +1,4 @@
-// https://docs.expo.dev/guides/using-eslint/
+// Тут підключається ESLint для Expo, щоб він перевіряв код і підсвічував помилки в стилі або синтаксисі.
 const { defineConfig } = require('eslint/config');
 const expoConfig = require('eslint-config-expo/flat');
 

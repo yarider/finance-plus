@@ -18,19 +18,19 @@ interface Store {
   budgetLimits: BudgetLimit[];
   initialized: boolean;
 
-  // Initialization
+  // Тут описую запуск стору: ця функція підтягує дані з бази і готує їх для додатку.
   initialize: () => Promise<void>;
 
-  // Transactions
+  // Тут зібрані дії для транзакцій: можна додати запис, видалити його або взяти записи за конкретний місяць.
   addTransaction: (transaction: Omit<Transaction, "id">) => Promise<void>;
   deleteTransaction: (id: string) => Promise<void>;
   getTransactionsByMonth: (month: number, year: number) => Transaction[];
 
-  // Categories
+  // Тут функції для категорій, щоб додавати нові категорії або прибирати ті, які вже не потрібні.
   addCategory: (category: Category) => void;
   removeCategory: (id: string) => void;
 
-  // Budget Limits
+  // Тут працюю з бюджетними лімітами: додаю ліміт, шукаю його по категорії і місяцю, або видаляю.
   addBudgetLimit: (limit: BudgetLimit) => Promise<void>;
   getBudgetLimit: (
     categoryId: string,
@@ -90,7 +90,7 @@ export const useFinanceStore = create<Store>((set, get) => ({
         transactions: [...state.transactions, newTransaction],
       }));
     } catch (error) {
-      console.error("Failed to add transaction:", error);
+      console.error("Помилка додавання транзакції:", error);
     }
   },
 
@@ -101,7 +101,7 @@ export const useFinanceStore = create<Store>((set, get) => ({
         transactions: state.transactions.filter((t) => t.id !== id),
       }));
     } catch (error) {
-      console.error("Failed to delete transaction:", error);
+      console.error("Помилка видалення транзакції:", error);
     }
   },
 

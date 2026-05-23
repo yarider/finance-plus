@@ -5,7 +5,6 @@ const db = SQLite.openDatabaseSync("finance-plus.db");
 
 export async function initDatabase() {
   try {
-    // Create tables
     await db.execAsync(`
       PRAGMA journal_mode = WAL;
       
@@ -34,9 +33,9 @@ export async function initDatabase() {
         year INTEGER NOT NULL
       );
     `);
-    console.log("Database initialized successfully");
+    console.log("БД ініціалізовано успішно");
   } catch (error) {
-    console.error("Database initialization error:", error);
+    console.error("БД ініціалізація помилка:", error);
   }
 }
 
@@ -47,7 +46,7 @@ export async function getAllTransactions(): Promise<Transaction[]> {
     );
     return result || [];
   } catch (error) {
-    console.error("Error fetching transactions:", error);
+    console.error("Помилка отримання транзакцій:", error);
     return [];
   }
 }
@@ -66,7 +65,7 @@ export async function addTransaction(transaction: Transaction): Promise<void> {
       ],
     );
   } catch (error) {
-    console.error("Error adding transaction:", error);
+    console.error("Помилка додавання транзакції:", error);
   }
 }
 
