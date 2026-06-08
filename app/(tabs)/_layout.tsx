@@ -1,94 +1,84 @@
 import { COLORS } from "@/constants";
 import { useFinanceStore } from "@/store";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Tabs } from "expo-router";
+import {
+  Icon,
+  Label,
+  NativeTabs,
+  VectorIcon,
+} from "expo-router/unstable-native-tabs";
 import { useEffect } from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TabLayout() {
   const initialize = useFinanceStore((state) => state.initialize);
-  const insets = useSafeAreaInsets();
-  const bottomInset = Math.max(insets.bottom);
 
   useEffect(() => {
     initialize();
   }, [initialize]);
 
   return (
-    <Tabs
-      screenOptions={{
-        sceneStyle: {
-          backgroundColor: COLORS.background,
-        },
-        tabBarActiveTintColor: COLORS.primary,
-        tabBarInactiveTintColor: COLORS.textMuted,
-        tabBarLabelStyle: {
+    <NativeTabs
+      disableTransparentOnScrollEdge
+      iconColor={{
+        default: COLORS.textMuted,
+        selected: COLORS.primary,
+      }}
+      labelStyle={{
+        default: {
+          color: COLORS.textMuted,
           fontSize: 12,
           fontWeight: "600",
         },
-        tabBarStyle: {
-          height: 62 + bottomInset,
-          paddingTop: 10,
-          paddingBottom: bottomInset,
-          backgroundColor: COLORS.surfaceContainer,
-          borderTopWidth: 0,
-          elevation: 0,
-        },
-        headerStyle: {
-          backgroundColor: COLORS.surface,
-        },
-        headerShadowVisible: false,
-        headerTintColor: COLORS.onPrimaryContainer,
-        headerTitleStyle: {
+        selected: {
+          color: COLORS.primary,
+          fontSize: 12,
           fontWeight: "700",
-          fontSize: 20,
         },
       }}
+      minimizeBehavior="never"
+      shadowColor="transparent"
+      tintColor={COLORS.primary}
     >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Фінанси",
-          tabBarLabel: "Фінанси",
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="list-alt" size={size} color={color} />
-          ),
-          headerTitle: "Фінансовий журнал",
-        }}
-      />
-      <Tabs.Screen
-        name="statistics"
-        options={{
-          title: "Статистика",
-          tabBarLabel: "Статистика",
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="pie-chart" size={size} color={color} />
-          ),
-          headerTitle: "Аналітика витрат",
-        }}
-      />
-      <Tabs.Screen
-        name="ai"
-        options={{
-          title: "AI",
-          tabBarLabel: "AI",
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="magic" size={size} color={color} />
-          ),
-          headerTitle: "AI фінансовий помічник",
-        }}
-      />
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: "Ліміти",
-          tabBarLabel: "Ліміти",
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="sliders" size={size} color={color} />
-          ),
-          headerTitle: "Категорії та ліміти",
-        }}
-      />
-    </Tabs>
+      <NativeTabs.Trigger name="index">
+        <Icon
+          sf={{
+            default: "list.bullet.rectangle",
+            selected: "list.bullet.rectangle.fill",
+          }}
+          androidSrc={<VectorIcon family={FontAwesome} name="list-alt" />}
+        />
+        <Label>Фінанси</Label>
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="statistics">
+        <Icon
+          sf={{
+            default: "chart.pie",
+            selected: "chart.pie.fill",
+          }}
+          androidSrc={<VectorIcon family={FontAwesome} name="pie-chart" />}
+        />
+        <Label>Статистика</Label>
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="ai">
+        <Icon
+          sf={{
+            default: "sparkles",
+            selected: "sparkles",
+          }}
+          androidSrc={<VectorIcon family={FontAwesome} name="magic" />}
+        />
+        <Label>AI</Label>
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="settings">
+        <Icon
+          sf={{
+            default: "slider.horizontal.3",
+            selected: "slider.horizontal.3",
+          }}
+          androidSrc={<VectorIcon family={FontAwesome} name="sliders" />}
+        />
+        <Label>Ліміти</Label>
+      </NativeTabs.Trigger>
+    </NativeTabs>
   );
 }

@@ -53,8 +53,13 @@ export default function StatisticsScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={["left", "right"]}>
+    <SafeAreaView
+      collapsable={false}
+      style={styles.container}
+      edges={["top", "bottom", "left", "right"]}
+    >
       <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.content}
       >
@@ -213,7 +218,7 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
     gap: 16,
-    paddingBottom: 32,
+    paddingBottom: 120,
   },
   periodCard: {
     flexDirection: "row",

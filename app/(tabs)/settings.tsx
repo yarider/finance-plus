@@ -17,10 +17,11 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function SettingsScreen() {
   const { height: windowHeight } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const { categories, budgetLimits, addBudgetLimit } = useFinanceStore();
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -105,7 +106,11 @@ export default function SettingsScreen() {
   const selectedCategoryData = categories.find((c) => c.id === selectedCategory);
 
   return (
-    <SafeAreaView style={styles.container} edges={["left", "right"]}>
+    <SafeAreaView
+      collapsable={false}
+      style={styles.container}
+      edges={["top", "bottom", "left", "right"]}
+    >
       <View style={styles.heroCard}>
         <Text style={styles.heroLabel}>Активний період</Text>
         <Text style={styles.heroTitle}>
@@ -117,6 +122,7 @@ export default function SettingsScreen() {
       </View>
 
       <SectionList
+        contentInsetAdjustmentBehavior="automatic"
         sections={sections}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
@@ -177,10 +183,12 @@ export default function SettingsScreen() {
         <KeyboardAvoidingView
           style={styles.overlay}
           behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={insets.top}
         >
           <Animated.View
             style={[
               styles.modalContainer,
+              { maxHeight: windowHeight - insets.top - 12 },
               { transform: [{ translateY: limitModalSlideAnim }] },
             ]}
           >
@@ -240,7 +248,12 @@ export default function SettingsScreen() {
               </View>
             </ScrollView>
 
-            <View style={styles.modalFooter}>
+            <View
+              style={[
+                styles.modalFooter,
+                { paddingBottom: Math.max(insets.bottom + 12, 16) },
+              ]}
+            >
               <TouchableOpacity
                 style={styles.cancelButton}
                 onPress={() => closeLimitModal()}
@@ -289,7 +302,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingHorizontal: 16,
-    paddingBottom: 32,
+    paddingBottom: 120,
   },
   sectionTitle: {
     marginTop: 16,

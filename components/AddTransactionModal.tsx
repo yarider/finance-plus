@@ -17,6 +17,7 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface AddTransactionModalProps {
   visible: boolean;
@@ -32,6 +33,7 @@ export function AddTransactionModal({
   categories,
 }: AddTransactionModalProps) {
   const { height: windowHeight } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const [isMounted, setIsMounted] = useState(visible);
   const slideAnim = useRef(new Animated.Value(windowHeight)).current;
   const [type, setType] = useState<TransactionType>("expense");
@@ -113,9 +115,14 @@ export function AddTransactionModal({
       <KeyboardAvoidingView
         style={styles.overlay}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={insets.top}
       >
         <Animated.View
-          style={[styles.container, { transform: [{ translateY: slideAnim }] }]}
+          style={[
+            styles.container,
+            { maxHeight: windowHeight - insets.top - 12 },
+            { transform: [{ translateY: slideAnim }] },
+          ]}
         >
           <View style={styles.header}>
             <View>
@@ -249,7 +256,12 @@ export function AddTransactionModal({
             )}
           </ScrollView>
 
-          <View style={styles.footer}>
+          <View
+            style={[
+              styles.footer,
+              { paddingBottom: Math.max(insets.bottom + 12, 16) },
+            ]}
+          >
             <TouchableOpacity
               style={styles.cancelButton}
               onPress={() => handleClose()}

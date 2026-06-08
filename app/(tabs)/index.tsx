@@ -1,4 +1,5 @@
 import { AddTransactionModal } from "@/components/AddTransactionModal";
+import { GlassAddButton } from "@/components/GlassAddButton";
 import { TransactionItem } from "@/components/TransactionItem";
 import { COLORS, MONTH_NAMES } from "@/constants";
 import { useFinanceStore } from "@/store";
@@ -72,8 +73,13 @@ export default function AccountScreen() {
   const getCategoryById = (id: string) => categories.find((c) => c.id === id);
 
   return (
-    <SafeAreaView style={styles.container} edges={["left", "right"]}>
+    <SafeAreaView
+      collapsable={false}
+      style={styles.container}
+      edges={["top", "bottom", "left", "right"]}
+    >
       <FlatList
+        contentInsetAdjustmentBehavior="automatic"
         data={[...monthTransactions].sort(
           (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
         )}
@@ -163,13 +169,7 @@ export default function AccountScreen() {
         showsVerticalScrollIndicator={false}
       />
 
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => setModalVisible(true)}
-        activeOpacity={0.9}
-      >
-        <FontAwesome name="plus" size={22} color={COLORS.onPrimary} />
-      </TouchableOpacity>
+      <GlassAddButton onPress={() => setModalVisible(true)} />
 
       <AddTransactionModal
         visible={modalVisible}
@@ -320,21 +320,5 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     textAlign: "center",
     color: COLORS.textMuted,
-  },
-  addButton: {
-    position: "absolute",
-    right: 24,
-    bottom: 32,
-    width: 56,
-    height: 56,
-    borderRadius: 16,
-    backgroundColor: COLORS.primary,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: COLORS.shadow,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.18,
-    shadowRadius: 12,
-    elevation: 8,
   },
 });

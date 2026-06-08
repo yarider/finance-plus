@@ -96,8 +96,13 @@ export default function AiScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={["left", "right"]}>
+    <SafeAreaView
+      collapsable={false}
+      style={styles.container}
+      edges={["top", "bottom", "left", "right"]}
+    >
       <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
@@ -214,7 +219,7 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
     gap: 14,
-    paddingBottom: 32,
+    paddingBottom: 120,
   },
   periodCard: {
     flexDirection: "row",
