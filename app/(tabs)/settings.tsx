@@ -5,11 +5,14 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
   Animated,
+  KeyboardAvoidingView,
   Modal,
   SectionList,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
+  Platform,
   TouchableOpacity,
   useWindowDimensions,
   View,
@@ -171,7 +174,10 @@ export default function SettingsScreen() {
         transparent
         onRequestClose={() => closeLimitModal()}
       >
-        <View style={styles.overlay}>
+        <KeyboardAvoidingView
+          style={styles.overlay}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
           <Animated.View
             style={[
               styles.modalContainer,
@@ -191,7 +197,13 @@ export default function SettingsScreen() {
               </TouchableOpacity>
             </View>
 
-            <View style={styles.modalContent}>
+            <ScrollView
+              style={styles.modalContent}
+              contentContainerStyle={styles.modalContentContainer}
+              keyboardShouldPersistTaps="handled"
+              keyboardDismissMode="interactive"
+              showsVerticalScrollIndicator={false}
+            >
               {selectedCategoryData && (
                 <View style={styles.selectedCard}>
                   <View
@@ -226,7 +238,7 @@ export default function SettingsScreen() {
                   onChangeText={setLimitAmount}
                 />
               </View>
-            </View>
+            </ScrollView>
 
             <View style={styles.modalFooter}>
               <TouchableOpacity
@@ -240,7 +252,7 @@ export default function SettingsScreen() {
               </TouchableOpacity>
             </View>
           </Animated.View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
     </SafeAreaView>
   );
@@ -380,8 +392,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.surfaceContainer,
   },
   modalContent: {
+    maxHeight: "72%",
+  },
+  modalContentContainer: {
     paddingHorizontal: 20,
     paddingBottom: 20,
+    gap: 20,
   },
   selectedCard: {
     flexDirection: "row",

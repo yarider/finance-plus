@@ -6,11 +6,13 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
   Animated,
+  KeyboardAvoidingView,
   Modal,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
+  Platform,
   TouchableOpacity,
   useWindowDimensions,
   View,
@@ -108,7 +110,10 @@ export function AddTransactionModal({
       transparent
       onRequestClose={() => handleClose()}
     >
-      <View style={styles.overlay}>
+      <KeyboardAvoidingView
+        style={styles.overlay}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
         <Animated.View
           style={[styles.container, { transform: [{ translateY: slideAnim }] }]}
         >
@@ -128,6 +133,8 @@ export function AddTransactionModal({
           <ScrollView
             style={styles.content}
             contentContainerStyle={styles.contentContainer}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="interactive"
             showsVerticalScrollIndicator={false}
           >
             <View style={styles.segmented}>
@@ -254,7 +261,7 @@ export function AddTransactionModal({
             </TouchableOpacity>
           </View>
         </Animated.View>
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }
